@@ -1,0 +1,51 @@
+---
+title: "Progetto Data Management"
+author: "Alex Fulgosi"
+date: "19 agosto 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+## Prova
+
+Questa è una prova per visualizzare il primo grafico sulla frequenza sinistri per regione, nella sua versione embrionale.
+
+
+
+```{r librerie,include=FALSE}
+#Carichiamo le librerie
+library(tidyverse)
+library(ggraph)
+```
+
+Ora importiamo il dataset:
+```{r dataset, message=FALSE}
+
+pol <- read_csv("Polizze.csv")
+```
+Il dataset utilizzato presenta ...
+```{r head data, echo=FALSE}
+knitr::kable(pol[1:5,])
+
+```
+
+Estraiamo la tabella di frequenza sinistri per regione, eccetto la Basilicata
+```{r tabella frequenze, echo=FALSE}
+
+rfreq <- aggregate(pol[, 7], list(regione=pol$regione), mean) %>%
+  rename(freq_sinistri=num_sinistri)
+rfreq<-rfreq[-2,]
+
+ggplot(data = rfreq) +
+  geom_point(mapping = aes(x = freq_sinistri, y = regione))
+```
+
+
+
+*Proviamo questo font*
