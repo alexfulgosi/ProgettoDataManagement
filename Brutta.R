@@ -9,11 +9,22 @@ pol <- read_csv("Polizze.csv", na = "MISS")
 bad <- pol %>%
   filter(num_sinistri != 0 & costo_plafonato > 0)
 
+#__________________________________________________________________________________
 
+#fai un introduzione dove spieghi la funzione attuariale e il perchè bisogna diversificare il rischio
+#spiega lo scopo della data challenge: trovre strutture nei dati che diano idea di come diversificare la valutazione rischio
 
+#poi inizia parlando della frequnza sinistri, falla vedere e fai un primo esempio di considerazione diversificata:
+#seppur per legge non si può, vediamo la differenza in base al sesso:
+sfreq <- aggregate(pol[, 7], list(sesso=pol$sesso), mean) %>%
+  rename(freq_sinistri=num_sinistri)
+#falla vedere con uno knitr figo su Markdown, vedi ?knitr::kable
+View(sfreq)
 #_______________________________________________________________________________
 
-#vediamo in qualu regione si concentrano maggiormente i sinistri della compagnia
+#ora inizia con quelle sensate:
+
+#vediamo in quale regione si concentrano maggiormente i sinistri della compagnia
 
 #dataframe con frequenza sinistri per regione
 rfreq <- aggregate(pol[, 7], list(regione=pol$regione), mean) %>%
@@ -32,9 +43,10 @@ ggplot(rfreq,aes(regione,freq_sinistri,fill=freq_sinistri)) +
   theme_grey()
 
 #come mai Basilicata ha frequenza 0? Sarà che ho poche obs?
-nrow(filter(pol, regione == "Basi"))/nrow(pol)
-#in effetti sì, meno della prob di sinistro:
+nrow(filter(pol, regione == "Basi")) #ne ho 16
+#in effetti sì, la prob di sinistro:
 mean(pol$num_sinistri)
+
 
 #togliamo allora la basilicata:
 rfreq<-rfreq[-2,]
@@ -55,14 +67,14 @@ ggplot(rfreq, aes(x = freq_sinistri, y = regione)) +
 #(questo poi sarà per dire che lo si fa a livello provinciale, ma farlo con tutte le prov era troppo messy)
 
 #per ordinare le provincie nel grafico 
-rank=tibble(x=c("Emil","Vall","Lomb","Friu","Marc","Sard","Ligu","Camp","Moli"),y=1:9)
+rank=tibble(x=c("Cala","Emil","Vall","Lomb","Friu","Marc","Sard","Ligu","Camp","Moli"),y=1:10)
 
 #estraiamo la prob sinistro per le provincie delle regioni blu e rosse
 pfreq<- aggregate(pol[, 7], list(PV_targa=pol$PV_targa), mean) %>%
   rename(prov=PV_targa) %>%
   rename(freq_sinistri=num_sinistri) %>%
   mutate(Regione=pol$regione[match(prov, pol$PV_targa)]) %>%
-  filter(Regione=="Emil"|Regione=="Friu"|Regione=="Lomb"|Regione=="Marc"|Regione=="Vall"|
+  filter(Regione=="Cala"|Regione=="Emil"|Regione=="Friu"|Regione=="Lomb"|Regione=="Marc"|Regione=="Vall"|
            Regione=="Sard"|Regione=="Moli"|Regione=="Ligu"|Regione=="Camp") %>%
   mutate(Rank=rank$y[match(Regione, rank$x)]) %>%
   filter(freq_sinistri != 0) %>%
@@ -76,7 +88,7 @@ pfreq$Provincia <- factor(pfreq$prov, as.character(pfreq$prov))
 ggplot(pfreq, aes(x = freq_sinistri, y = Provincia, color=Regione, order = Rank)) +
   geom_point(size=2)+
   scale_colour_manual(
-    values = c(Emil="#000066", Vall="#0000CC", Lomb="#3333FF", Friu="#3399CC", Marc="#66CCFF", 
+    values = c(Cala="#000066", Emil="#0000CC", Vall="#0000FF", Lomb="#3333FF", Friu="#3399CC", Marc="#66CCFF", 
                Sard="#FF3333", Ligu="#FF0033", Camp="#CC0000", Moli="#990000")) +
   labs(
     title = "Probabilità di sinistro nelle provincie",
@@ -84,13 +96,88 @@ ggplot(pfreq, aes(x = freq_sinistri, y = Provincia, color=Regione, order = Rank)
     x = "Probabilità di sinistro",      
     y = "Provincie") 
 
-#a isernia ogni anno si ha quasi il 2% di prob di avere un sinistro! 
-
-
-
-#fai la stessa cosa con sesso (sfreq), eta (efreq) ,alimentazione (afreq)
+#a isernia ogni anno si ha quasi il 20% di prob di avere un sinistro! 
+#in calabria molta variabilità, ma Reggio cal solo 2.5%
 
 #___________________________________________________________________________________
+
+#frequenze per età
+efreq <- aggregate(pol[, 7], list(eta=pol$eta), mean) %>%
+  rename(freq_sinistri=num_sinistri)
+
+#con frequenza
+ggplot(efreq, aes(eta, freq_sinistri)) +
+  geom_line(color="blue", size=1) +
+  labs(
+    title = "Probabilità di sinistro",
+    subtitle = "Trend in base all'aumento dell'età del guidatore", 
+    x = "Età",
+    y = "Probabilità di sinistro",
+    fill = "Probabilità di sinistro") +
+  scale_x_continuous(breaks = seq(20, 90, by = 10))
+
+#il trend mostra una graduale diminuzione della robabilità al crescere dell'età
+#a parte una piccola risalita nelle età più avanzate
+
+#___________________________________________________________________________________
+
+#con la potenza
+ggplot(pol, aes(HP_fiscali))+
+  geom_bar() +
+  coord_cartesian(ylim=c(0,20)) +
+  scale_x_continuous(breaks = seq(0, 50, by = 1)) 
+#togliamo <6 e >38
+
+#frequenze per potenza del veicolo
+hfreq <- aggregate(pol[, 7], list(HP_fiscali=pol$HP_fiscali), mean) %>%
+  rename(freq_sinistri=num_sinistri) %>%
+  filter(HP_fiscali > 5 & HP_fiscali < 39)
+
+
+ggplot(hfreq, aes(HP_fiscali, freq_sinistri)) +
+  geom_line(color="#FF6600", size=1) +
+  labs(
+    title = "Probabilità di sinistro",
+    subtitle = "Trend in base all'aumento di cilindrata dei veicoli", 
+    x = "Cilindrata / 100",
+    y = "Probabilità di sinistro",
+    fill = "Probabilità di sinistro") 
+
+#dai veicoli meno potenti ai veicoli fino a 2500 di cilindrata il trend va salendo
+#nei veicoli più potenti (oltre i 3000) sembra scendere, c'è poi un picco in quelli potentissimi (circa 4000)
+
+
+
+#______________________________________________________________________________________
+
+
+#frequenze per tipo di alimntazione
+afreq <- aggregate(pol[, 7], list(alimentazione=pol$alimentazione), mean) %>%
+  rename(freq_sinistri=num_sinistri)
+
+ggplot(afreq, aes(alimentazione, freq_sinistri, fill=freq_sinistri)) +
+  geom_col() +
+  coord_polar() +
+  theme_minimal() +
+  scale_fill_gradient(low="white", high="#009900", limits=c(0,0.25)) +
+  scale_y_continuous(breaks = seq(2, 10, by = 1)) +
+  labs(
+    title = "Probabilità di sinistro per tipologia di alimentazione del veicolo",
+    x = "",      
+    y = "",
+    fill = "Probabilità di sinistro")
+
+#anche in questo caso si evidenzia una diversa probabilità in base all'alimentazione
+#alcune tipologie la hanno molto alta e altre molto bassa
+
+#___________________________________________________________________________________
+
+
+
+
+
+
+#____________________________________________________________________________________
 
 #vedi se fare la cosa dei ested e variare qualche .. vs .. per l'età
 
