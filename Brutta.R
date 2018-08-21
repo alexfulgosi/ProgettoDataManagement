@@ -2,12 +2,17 @@ library(tidyverse)
 library(modelr)
 
 
-pol <- read_csv("Polizze.csv", na = "MISS")
-#se riesci imposta come NA i MISS
+pol <- read_csv("Polizze.csv", na = "MISS") %>%
+  rename(costo=costo_plafonato)
 
-#dataset con chi ha provocato uno o più incidenti recando danni alla compagnia
-bad <- pol %>%
-  filter(num_sinistri != 0 & costo_plafonato > 0)
+
+
+#dataset con chi ha provocato uno o più incidenti
+#la classe bad è per chi ha provocato danni e good chi li ha subiti
+sinis <- pol %>%
+  filter(num_sinistri != 0 & costo != 0)
+sinis$class=ifelse(sinis$costo < 0, "Good", "Bad")
+sinis$costo=abs(sinis$costo)
 
 #__________________________________________________________________________________
 
@@ -114,7 +119,8 @@ ggplot(efreq, aes(eta, freq_sinistri)) +
     x = "Età",
     y = "Probabilità di sinistro",
     fill = "Probabilità di sinistro") +
-  scale_x_continuous(breaks = seq(20, 90, by = 10))
+  scale_x_continuous(breaks = seq(20, 90, by = 10)) +
+  geom_hline(aes(yintercept=mean(pol$num_sinistri)), linetype=2, alpha=0.5)
 
 #il trend mostra una graduale diminuzione della robabilità al crescere dell'età
 #a parte una piccola risalita nelle età più avanzate
@@ -124,14 +130,14 @@ ggplot(efreq, aes(eta, freq_sinistri)) +
 #con la potenza
 ggplot(pol, aes(HP_fiscali))+
   geom_bar() +
-  coord_cartesian(ylim=c(0,20)) +
+  coord_cartesian(ylim=c(0,200)) +
   scale_x_continuous(breaks = seq(0, 50, by = 1)) 
-#togliamo <6 e >38
+#togliamo <6 e >33
 
 #frequenze per potenza del veicolo
 hfreq <- aggregate(pol[, 7], list(HP_fiscali=pol$HP_fiscali), mean) %>%
   rename(freq_sinistri=num_sinistri) %>%
-  filter(HP_fiscali > 5 & HP_fiscali < 39)
+  filter(HP_fiscali > 5 & HP_fiscali < 34)
 
 
 ggplot(hfreq, aes(HP_fiscali, freq_sinistri)) +
@@ -141,12 +147,40 @@ ggplot(hfreq, aes(HP_fiscali, freq_sinistri)) +
     subtitle = "Trend in base all'aumento di cilindrata dei veicoli", 
     x = "Cilindrata / 100",
     y = "Probabilità di sinistro",
-    fill = "Probabilità di sinistro") 
+    fill = "Probabilità di sinistro") +
+  geom_hline(aes(yintercept=mean(pol$num_sinistri)), linetype=2, alpha=0.5)
 
 #dai veicoli meno potenti ai veicoli fino a 2500 di cilindrata il trend va salendo
 #nei veicoli più potenti (oltre i 3000) sembra scendere, c'è poi un picco in quelli potentissimi (circa 4000)
+#___________________________________________________________________________________
+
+#con l'età del veicolo
+ggplot(pol, aes(anni_auto))+
+  geom_bar() +
+  coord_cartesian(ylim=c(0,200)) +
+  scale_x_continuous(breaks = seq(0, 50, by = 1)) 
+#togliamo la coda sopra i 27
 
 
+#frequenze per età del veicolo
+vfreq <- aggregate(pol[, 7], list(anni_auto=pol$anni_auto), mean) %>%
+  rename(freq_sinistri=num_sinistri) %>%
+  filter(anni_auto >= 0 & anni_auto < 28)
+
+
+ggplot(vfreq, aes(anni_auto, freq_sinistri)) +
+  geom_line(color="#663366", size=1) +
+  labs(
+    title = "Probabilità di sinistro",
+    subtitle = "Trend in base all'aumento dell' età del veicolo", 
+    x = "Anni dall'immatricolazione",
+    y = "Probabilità di sinistro",
+    fill = "Probabilità di sinistro") +  
+  scale_x_continuous(breaks = seq(0, 30, by = 5)) +
+  geom_hline(aes(yintercept=mean(pol$num_sinistri)), linetype=2, alpha=0.5)
+
+#aparte nei veicoli più vecchi dove c'è variabilità, probabilmente legata allo scarso numero di osservazioni,
+#il trend sembra dire che la probabilità cali all'aumentare dell'anzianità del veicolo
 
 #______________________________________________________________________________________
 
@@ -171,7 +205,11 @@ ggplot(afreq, aes(alimentazione, freq_sinistri, fill=freq_sinistri)) +
 #alcune tipologie la hanno molto alta e altre molto bassa
 
 #___________________________________________________________________________________
+#_______________________________________________________________________________________
 
+#Iniziamo ora a considerare il costo dei sinistri
+
+#iniziamo con una differenza tra uomini e donne
 
 
 
