@@ -10,9 +10,8 @@ pol <- read_csv("Polizze.csv", na = "MISS") %>%
 #dataset con chi ha provocato uno o più incidenti
 #la classe bad è per chi ha provocato danni e good chi li ha subiti
 sinis <- pol %>%
-  filter(num_sinistri != 0 & costo != 0)
-sinis$class=ifelse(sinis$costo < 0, "Good", "Bad")
-sinis$costo=abs(sinis$costo)
+  filter(num_sinistri != 0 & costo > 0)
+
 
 #__________________________________________________________________________________
 
@@ -60,26 +59,27 @@ rfreq<-rfreq[-2,]
 #ecco un grafico con cui è più chiaro
 ggplot(rfreq, aes(x = freq_sinistri, y = regione)) +
   geom_point(size=2) +
-  geom_point(data=filter(rfreq, freq_sinistri<=0.065),color="blue",size=3) +
+  geom_point(data=filter(rfreq, freq_sinistri<=0.06),color="blue",size=3) +
   geom_point(data=filter(rfreq, freq_sinistri>=0.1),color="red",size=3) +
+  geom_text(aes(label=regione), alpha=0.3)
   labs(
     title = "Probabilità di sinistro per regione italiana",
     subtitle= "Quali regioni sono le 'peggiori' e quali le 'migliori'",
     x = "Probabilità di sinistro",      
-    y = "Regioni")
+    y = "Regioni") +
 
 #questa differenza varrà anche a livelo provinciale? Vediamolo solo per le regioni più critiche
 #(questo poi sarà per dire che lo si fa a livello provinciale, ma farlo con tutte le prov era troppo messy)
 
 #per ordinare le provincie nel grafico 
-rank=tibble(x=c("Cala","Emil","Vall","Lomb","Friu","Marc","Sard","Ligu","Camp","Moli"),y=1:10)
+rank=tibble(x=c("Cala","Vene", "Emil","Sard","Ligu","Camp","Moli"),y=1:7)
 
 #estraiamo la prob sinistro per le provincie delle regioni blu e rosse
 pfreq<- aggregate(pol[, 7], list(PV_targa=pol$PV_targa), mean) %>%
   rename(prov=PV_targa) %>%
   rename(freq_sinistri=num_sinistri) %>%
   mutate(Regione=pol$regione[match(prov, pol$PV_targa)]) %>%
-  filter(Regione=="Cala"|Regione=="Emil"|Regione=="Friu"|Regione=="Lomb"|Regione=="Marc"|Regione=="Vall"|
+  filter(Regione=="Cala"|Regione=="Vene"|Regione=="Emil"|
            Regione=="Sard"|Regione=="Moli"|Regione=="Ligu"|Regione=="Camp") %>%
   mutate(Rank=rank$y[match(Regione, rank$x)]) %>%
   filter(freq_sinistri != 0) %>%
@@ -93,8 +93,8 @@ pfreq$Provincia <- factor(pfreq$prov, as.character(pfreq$prov))
 ggplot(pfreq, aes(x = freq_sinistri, y = Provincia, color=Regione, order = Rank)) +
   geom_point(size=2)+
   scale_colour_manual(
-    values = c(Cala="#000066", Emil="#0000CC", Vall="#0000FF", Lomb="#3333FF", Friu="#3399CC", Marc="#66CCFF", 
-               Sard="#FF3333", Ligu="#FF0033", Camp="#CC0000", Moli="#990000")) +
+    values = c(Cala="#330066", Vene="#3333FF", Emil="#3399CC", 
+               Sard="#FF6666", Ligu="#FF3333", Camp="#FF0033", Moli="#990000")) +
   labs(
     title = "Probabilità di sinistro nelle provincie",
     subtitle= "Le 'migliori' regioni (in blu) e 'peggiori' (in rosso) a livello provinciale",
@@ -205,13 +205,30 @@ ggplot(afreq, aes(alimentazione, freq_sinistri, fill=freq_sinistri)) +
 #alcune tipologie la hanno molto alta e altre molto bassa
 
 #___________________________________________________________________________________
+#Iniziamo ora a considerare il costo dei sinistri
 #_______________________________________________________________________________________
 
-#Iniziamo ora a considerare il costo dei sinistri
 
-#iniziamo con una differenza tra uomini e donne
+#vediamo i boxplot per le regioni
+
+#mettiamoli in ordine dalla regione con più frequenza di sinistri a quella con meno
+
+sinis2 = sinis %>%
+  filter(regione != "NA")
+
+ggplot(sinis2, aes(regione, costo)) +
+  geom_boxplot(color="#993300", fill="#FFFFCC") +
+  coord_cartesian(ylim=c(0,15000)) +
+  labs(
+    title = "Ammontare del costo dei sinistri nelle regioni italiane",
+    x = "Regioni",
+    y = "Costo del sinistro") 
 
 
+#il costo si mantiene pressochè uguale nelle varie regioni
+#in piemonte si registrano al primo quartile costi un poò più bassi
+#in calabria grande variabilità
+#avevamo osservato già una variabilità tra la prob di sinistro nelle regioni calabresi
 
 
 
