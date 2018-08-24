@@ -13,6 +13,31 @@ sinis <- pol %>%
   filter(num_sinistri != 0 & costo > 0)
 
 
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  plots <- c(list(...), plotlist)
+  numPlots = length(plots)
+  if (is.null(layout)) {
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+  } else {
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    for (i in 1:numPlots) {
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+#________________________________________________________________________________________
+
+
 #__________________________________________________________________________________
 
 #fai un introduzione dove spieghi la funzione attuariale e il perchè bisogna diversificare il rischio
@@ -57,16 +82,18 @@ rfreq<-rfreq[-2,]
 
 #ora, quali sono le regioni migliori e quali peggiori?
 #ecco un grafico con cui è più chiaro
-ggplot(rfreq, aes(x = freq_sinistri, y = regione)) +
+p1=ggplot(rfreq, aes(x = freq_sinistri, y = regione)) +
   geom_point(size=2) +
   geom_point(data=filter(rfreq, freq_sinistri<=0.06),color="blue",size=3) +
   geom_point(data=filter(rfreq, freq_sinistri>=0.1),color="red",size=3) +
-  geom_text(aes(label=regione), alpha=0.3) +
+  geom_text(aes(label=regione), alpha=0.3, hjust = 0, nudge_x = 0.001) +
   labs(
     title = "Probabilità di sinistro per regione italiana",
     subtitle= "Quali regioni sono le 'peggiori' e quali le 'migliori'",
     x = "Probabilità di sinistro",      
-    y = "Regioni") 
+    y = "Regioni") +
+  theme(axis.text.y=element_blank(), axis.ticks.y=element_blank())
+p1
 
 #questa differenza varrà anche a livelo provinciale? Vediamolo solo per le regioni più critiche
 #(questo poi sarà per dire che lo si fa a livello provinciale, ma farlo con tutte le prov era troppo messy)
@@ -90,19 +117,24 @@ pfreq$Provincia <- factor(pfreq$prov, as.character(pfreq$prov))
   
 
 #grafico delle provincie d'interesse, varrà la differenza anche a liv provinciale?
-ggplot(pfreq, aes(x = freq_sinistri, y = Provincia, color=Regione, order = Rank)) +
+p2=ggplot(pfreq, aes(x = freq_sinistri, y = Provincia, color=Regione, order = Rank)) +
   geom_point(size=2)+
   scale_colour_manual(
     values = c(Cala="#330066", Vene="#3333FF", Emil="#3399CC", 
                Sard="#FF6666", Ligu="#FF3333", Camp="#FF0033", Moli="#990000")) +
+  geom_text(aes(label=Provincia), alpha=0.3, hjust = 0, nudge_x = 0.001) +
   labs(
     title = "Probabilità di sinistro nelle provincie",
     subtitle= "Le 'migliori' regioni (in blu) e 'peggiori' (in rosso) a livello provinciale",
     x = "Probabilità di sinistro",      
-    y = "Provincie") 
+    y = "Provincie") +
+  theme(axis.text.y=element_blank(), axis.ticks.y=element_blank())
 
+multiplot(p1, p2)
+#come si vede, vale anche a liv provinciale
 #a isernia ogni anno si ha quasi il 20% di prob di avere un sinistro! 
 #in calabria molta variabilità, ma Reggio cal solo 2.5%
+#commenta poi che ad esempio in Liguria si ha bassa freq a savona ma non a genova ecc..
 
 #___________________________________________________________________________________
 
@@ -211,7 +243,6 @@ ggplot(afreq, aes(alimentazione, freq_sinistri, fill=freq_sinistri)) +
 
 #vediamo i boxplot per le regioni
 
-#mettiamoli in ordine dalla regione con più frequenza di sinistri a quella con meno
 
 sinis2 = sinis %>%
   filter(regione != "NA")
@@ -249,15 +280,17 @@ ggplot(Cal, aes(PV_targa, costo)) +
 rcost <- aggregate(sinis[, 8], list(regione=sinis$regione), mean) %>%
   rename(costo_med=costo)
 
-ggplot(rcost, aes(x = costo_med, y = regione)) +
+p3=ggplot(rcost, aes(x = costo_med, y = regione)) +
   geom_point(size=2) +
   geom_point(data=filter(rcost, costo_med<=3500),color="blue",size=3) +
   geom_point(data=filter(rcost, costo_med>=4000),color="red",size=3) +
-  geom_text(aes(label=regione), alpha=0.3) +
+  geom_text(aes(label=regione), alpha=0.3, hjust = 0, nudge_x = 100) +
   labs(
     title = "Costo medio del sinistro per regione italiana",
     x = "Costo medio sinistro",      
-    y = "Regioni") 
+    y = "Regioni") +
+  theme(axis.text.y=element_blank(), axis.ticks.y=element_blank())
+p3
 
 #la provincia di ... è probabilmente quella che fa alzare di così tanto il costo medio:
 Cal_cost <- aggregate(Cal[, 8], list(PV_targa=Cal$PV_targa), mean) %>%
@@ -267,12 +300,13 @@ ggplot(Cal_cost, aes(x = costo_med, y = PV_targa)) +
   geom_point(size=2) +
   geom_point(data=filter(Cal_cost, costo_med<=3500),color="blue",size=3) +
   geom_point(data=filter(Cal_cost, costo_med>=4000),color="red",size=3) +
-  geom_text(aes(label=PV_targa), alpha=0.3) +
+  geom_text(aes(label=PV_targa), alpha=0.3, hjust = 0, nudge_x = 100) +
   scale_x_continuous(breaks = seq(2000, 10000, by = 1000)) +
   labs(
     title = "Costo medio del sinistro per provincia calabrese",
     x = "Costo medio sinistro",      
-    y = "Province") 
+    y = "Province") +
+  theme(axis.text.y=element_blank(), axis.ticks.y=element_blank())
 #proprio come pensato..
 #___________________________________________________________________________________
 
@@ -321,15 +355,20 @@ ggplot(sinis2, aes(HP_fiscali, costo)) +
 
 #con alimentazione
 #per alcune abbiamo poche obs:
-ggplot(sinis, aes(alimentazione))+
-  geom_bar() +
-  coord_cartesian(ylim=c(0,200))
+ggplot(sinis, aes(alimentazione)) +
+  geom_bar(color = "#006600", fill = "#99FF99") +
+  coord_cartesian(ylim=c(0,50)) +
+  geom_hline(aes(yintercept=10), linetype=2, alpha=0.5, color="red") 
 #togliamo 02, 12, 19, P3, P4
+
+sinis3 <- sinis %>%
+  filter (alimentazione != "02" & alimentazione != "12" & alimentazione != "19" & alimentazione != "P3" & alimentazione != "P4")
 
 acost <- aggregate(sinis[, 8], list(alimentazione=sinis$alimentazione), mean) %>%
   rename(costo_med=costo) %>%
   filter (alimentazione != "02" & alimentazione != "12" & alimentazione != "19" & alimentazione != "P3" & alimentazione != "P4")
 
+#con costo medio
 ggplot(acost, aes(alimentazione, costo_med, fill=costo_med)) +
   geom_col() +
   coord_polar() +
@@ -341,17 +380,55 @@ ggplot(acost, aes(alimentazione, costo_med, fill=costo_med)) +
     x = "",      
     y = "",
     fill = "Costo medio sinistro")
+#la 24 sembra avere costi alti
 
-#ABBELISCI  IL GRAFICO FREQUENZE E FAI BOXPLOT PER COSTO NON MEDIO
+#con costo
+ggplot(sinis3, aes(alimentazione, costo)) +
+  geom_boxplot(color = "#006600", fill = "#FFFFCC") +
+  coord_cartesian(ylim=c(0,15000)) +
+  labs(
+    title = "Ammontare del costo dei sinistri per tipologia di alimentazione del veicolo",
+    x = "Codice tipologia di alimentazione",
+    y = "Costo del sinistro") 
+
+#infatti notiamo che la 24 è quella che presenta maggior variabilità e raggiunge i costi più elevati
+#bassi costi per la 22
+#si dovrebbe prezzare allora meno la 22 e più la 24..
 
 #_______________________________________________________________________________________
-#poi fai un grafico per alimentazione simile a quello su freq ma con costo medio
-#vedi se eventualmente farme un altro con alimentazione e costo (non medio)
-#poi prendi le alimentazioni con più e meno costo e fai il modelo eta vs costo diversificato per quele alimentazioni
-#magari diversificalo anche per le regioni , o magari con dopia legenda sia per regioni che alimentazione
+
+#Si possono poi vedere analisi incrociate. Ad esempio Valutiamo se la relazione tra costo e età 
+#vale e in che modo sulle regioni che ne determinano uno basso o elevato
+
+sinis4 <- sinis %>%
+  filter(regione == "Lomb" | regione == "Sard" | regione == "Umbr" | regione == "Cala")
+
+
+p4=ggplot(sinis4, aes(eta, costo, color=regione)) +
+  geom_smooth(method = lm, se = FALSE) +
+  scale_color_manual(
+    values = c(Lomb = "#000099", Sard = "#3333FF", Umbr = "#FF0000", Cala= "#CC0000")
+  ) +
+  labs(
+    title = "Andamento del costo dei sinistri al crescere dell'età del guidatore",
+    subtitle = "Condizionatamente alla regione",
+    x = "Età del guidatore",      
+    y = "Costo del sinistro") 
+
+multiplot(p3, p4, cols=2)
+
+#si vede come le rette siano per le regioni a costi alti più in alto
+#per quanto riguarda l'Umbria questo effetto dell'età sembra essere ancora più marcato
+#lo è un po' meno in Lombradia dove la pendenza è minima
+
+
+
+#_______________________________________________________________________________________
+
+
 #____________________________________________________________________________________
 
-#vedi se fare la cosa dei ested e variare qualche .. vs .. per l'età
+#vedi se fare la cosa dei nested e variare qualche .. vs .. per l'età
 
 #fai un modello e usa le cose di many models o parti prima
 
