@@ -1,5 +1,5 @@
 ---
-title: "Progetto Data Management"
+title: "Progetto Data Management for Big Data"
 author: "Alex Fulgosi"
 date: "19 agosto 2018"
 output: html_document
@@ -9,31 +9,63 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Titolo
+ 
+<br>
 
+### 1.Introduzione
 
+La polizza per la responsabilità civile auto è il contatto assicurativo più diffuso e di uso comune. In Italia è per legge obbligatorio dal 1969 per chiunque metta in circolo, anche se non da proprietario, un veicolo a motore o natante.<br>All'interno delle imprese assicurative che esercitano il ramo RCA, fondamentale è la funzione attuariale, atta a valutare l'adeguatezza dell'assunzione dei rischi. In linea generale, ciò si traduce nel calcolare adeguatamente i requisiti patrimoniali e le riserve tecniche delle imprese, nella gestione di queste ultime, e nella valutazione dei rischi e dei modelli che ne stimano l'incidenza.<br>Essendo la polizza RCA obbligatoria, e quindi vigendo l'obbligo per le imprese di contrarre con i clienti, il ruolo attuariale che diviene ancor più fondamentale in questo ramo è quello di valutare adeguatamente il rischio. In altre parole, non potendo negare la copertura assicurativa, bisogna quantomeno darle il giusto prezzo.<br>Diventa allora fondamentale tracciare un profilo dettagliato del cliente, che determina in base alle caratteristiche di quest'ultimo, quanto rischioso sia assicurarne la responsabilità civile per la messa in circolo di un veicolo, e avere un quadro di quali siano le caratteristiche che fanno propendere per una tariffazione maggiore o minore, al fine di risultare appetibili per clienti preferibili e di tutelarsi da quelli più rischiosi.<br>
 
-## Prova
+<br>
 
-Questa è una prova per visualizzare il primo grafico sulla frequenza sinistri per regione, nella sua versione embrionale.
+###2.Scopo dell'analisi
 
+Lo scopo del progetto è quello di analizzare un dataset che raccoglie informazioni su profili di clienti di un'impresa di assicurazione che esercita il ramo RCA, e capire quali tra queste informazioni possono avere un incidenza nel determinare se il rischio assicurato per il cliente è maggiore o minore.<br>Senza scendere nel dettaglio della stima del rischio e del suo inserimento nei modelli attuariali, questa analisi si propone di dare visione, attraverso l'utilizzo di grafici, dell'incidenza che alcune caratteristiche di un assicurato hanno sul suo profilo di rischio. In particolare si vuole spiegare qual'è l'incidenza sulla sinistrosità di un soggetto, ovvero quanto questo propenda ad avere incidenti stradali, e sull'ammontare dei costi che questo comporta all'impresa.<br>
 
+<br>
 
-```{r librerie,include=FALSE}
+###3.Il dataset utilizzato
+
+Il dataset utilizzato appartiene ad un'impresa di assicurazione di cui, per ragioni di privacy, non si conosce il nome. È stato messo a mia disposizione dal professor Salvatore Militello, docente di Statistica per le Assicurazioni presso l'Università degli Studi di Milano Bicocca.<br>Il dataset raccoglie profili di clienti che hanno una polizza RCA con l'impresa, e per ognuno sono registrate caratteristiche del soggetto e del veicolo assicurato in un anno corrente. In particolare si fa riferimento al 2007, e vengono anche registrati il numero di sinistri avvenuti e l'eventuale costo.<br>Nello specifico le variabili del dataset sono le seguenti:
+```{r import data,include=FALSE}
 #Carichiamo le librerie
 library(tidyverse)
-library(ggraph)
+pol <- read_csv("Polizze.csv", na = "MISS") %>%
+  rename(costo=costo_plafonato)
 ```
-
-Ora importiamo il dataset:
-```{r dataset, message=FALSE}
-
-pol <- read_csv("Polizze.csv")
-```
-Il dataset utilizzato presenta ...
 ```{r head data, echo=FALSE}
 knitr::kable(pol[1:5,])
 
 ```
+
+Dove:
+
+* `BM_cip` è la classe Bonus/Malus dell'assicurato
+* `PV_targa` è la provincia di immatricolazione del veicolo
+* `HP_fiscali` è la potenza fiscale del veicolo (ovvero la cilindrata/100)
+* `sesso` indica il sesso dell'assicurato, M (maschio) o F (femmina)
+* `eta` è l'età dell'assicurato
+* `alimentazione` rappresenta attraverso 59 classi la tipologia di alimentazione del veicolo
+* `num_sinistri` è il numero di sinistri occorsi durante l'anno
+* `costo` è il costo per la compagnia dei sinistri avvenuti
+* `anni_auto` sono gli anni trascorsi dall'immatricolazione del veicolo
+* `regione` è la regione in cui è stato immatricolato il veicolo
+
+<br>
+
+###4.Analisi condotte
+
+Le analisi condotte sono state fatte utilizzando il software R tramite RStudio, servendosi di funzioni dei pacchetti tidyverse:
+```{r dataset, message=FALSE}
+library(tidyverse)
+```
+È stato analizzato come varia la frequenza dei sinistri ed il loro costo al variare della regione o rovincia d'immatricolazione, dell'età dell'assicurato e degli anni e alimentazione del veicolo.<br>Per farlo, sono stati estrapolate con il pacchetto `dplyr` delle tibbles [^1] , utilizzate per realizzare grafici attraverso il pacchetto `ggplot2`.<br>Il risultato ottenuto è mirato a mostrare l'impatto che le variabili d'interesse hanno sulle variabili oggetto di studio.<br>Non è scopo di questo progetto fornire una reale diversificazione del rischio fondata sulle variabili d'interessse, ovvero cluster di appartenenza in cui per un cliente viene stimata ad esempio la probabilità di sinistro. Si cerca però di dare un quadro generale di quello che è l'impatto di certe caratteristiche di un cliente.<br>
+
+<br>
+
+###5.Risultati
+
 
 Estraiamo la tabella di frequenza sinistri per regione, eccetto la Basilicata
 ```{r tabella frequenze, echo=FALSE}
@@ -46,6 +78,7 @@ ggplot(data = rfreq) +
   geom_point(mapping = aes(x = freq_sinistri, y = regione))
 ```
 
+[^1]: Here is the footnote.
 
 
 *Proviamo questo font*
