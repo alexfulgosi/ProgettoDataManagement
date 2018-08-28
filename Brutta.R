@@ -1,5 +1,5 @@
 library(tidyverse)
-library(modelr)
+
 
 
 pol <- read_csv("Polizze.csv", na = "MISS") %>%
@@ -8,7 +8,6 @@ pol <- read_csv("Polizze.csv", na = "MISS") %>%
 
 
 #dataset con chi ha provocato uno o più incidenti
-#la classe bad è per chi ha provocato danni e good chi li ha subiti
 sinis <- pol %>%
   filter(num_sinistri != 0 & costo > 0)
 
@@ -40,15 +39,13 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 #__________________________________________________________________________________
 
-#fai un introduzione dove spieghi la funzione attuariale e il perchè bisogna diversificare il rischio
-#spiega lo scopo della data challenge: trovre strutture nei dati che diano idea di come diversificare la valutazione rischio
 
-#poi inizia parlando della frequnza sinistri, falla vedere e fai un primo esempio di considerazione diversificata:
 #seppur per legge non si può, vediamo la differenza in base al sesso:
 sfreq <- aggregate(pol[, 7], list(sesso=pol$sesso), mean) %>%
   rename(freq_sinistri=num_sinistri)
-#falla vedere con uno knitr figo su Markdown, vedi ?knitr::kable
+#falla vedere con uno knitr su Markdown
 View(sfreq)
+
 #_______________________________________________________________________________
 
 #ora inizia con quelle sensate:
@@ -134,7 +131,6 @@ multiplot(p1, p2)
 #come si vede, vale anche a liv provinciale
 #a isernia ogni anno si ha quasi il 20% di prob di avere un sinistro! 
 #in calabria molta variabilità, ma Reggio cal solo 2.5%
-#commenta poi che ad esempio in Liguria si ha bassa freq a savona ma non a genova ecc..
 
 #___________________________________________________________________________________
 
@@ -328,9 +324,9 @@ ggplot(sinis, aes(eta, costo)) +
 #si è visto precedentemente che la sinistrosità decresce con l'età
 #anche il costo! bisogna quindi avere una verta prudenza nell'assicurare i giovani
 
-#__________________________________________________________________________________
 
-#con potenza
+#_____________________________________________________________________________________
+#con potenza (non sign)
 
 hcost <- aggregate(sinis[, 8], list(HP_fiscali=sinis$HP_fiscali), mean) %>%
   rename(costo_med=costo) %>%
@@ -348,8 +344,33 @@ ggplot(sinis2, aes(HP_fiscali, costo)) +
     x = "Cilindrata / 100",      
     y = "Costo del sinistro") 
 
-#in questo caso l'andamento è crescente, seppur una crescita non particolarmente forte
-#è comunque un elemento che aggiunto alla sinistrosita crescente fa propendere per una minor tariffazione dei veicoli a bassa cilindrata
+#e a basse cilindrate?
+hcost2 <- aggregate(sinis[, 8], list(HP_fiscali=sinis$HP_fiscali), mean) %>%
+  rename(costo_med=costo) %>%
+  filter(HP_fiscali < 11)
+
+sinis22 <- filter(sinis, HP_fiscali < 11 )
+
+ggplot(sinis22, aes(HP_fiscali, costo)) +
+  geom_line(data=hcost2, aes(HP_fiscali, costo_med), color="#FF6600", size=1, alpha=0.3) +
+  geom_smooth(method = lm, color="#FF6600") +
+  labs(
+    title = "Andamento del costo dei sinistri al crescere della cilindrata del veicolo",
+    subtitle = "Paragone con il trend del costo medio",
+    x = "Cilindrata / 100",      
+    y = "Costo del sinistro") 
+#__________________________________________________________________________________
+
+#NON SIGN
+
+#con eta veicolo
+
+ggplot(sinis, aes(anni_auto, costo)) +
+  geom_smooth(method = lm, color="#663366") +
+  labs(
+    title = "Andamento del costo dei sinistri al crescere dell'età del veicolo",
+    x = "Anni dall'immatricolazione",      
+    y = "Costo del sinistro") 
 
 #_________________________________________________________________________________________
 
@@ -427,11 +448,3 @@ multiplot(p3, p4, cols=2)
 
 
 #____________________________________________________________________________________
-
-#vedi se fare la cosa dei nested e variare qualche .. vs .. per l'età
-
-#fai un modello e usa le cose di many models o parti prima
-
-#se riesci creati un target binario e fai il mod logitico per far vedere le cose di DM
-
-#__________________________________________________________________________________

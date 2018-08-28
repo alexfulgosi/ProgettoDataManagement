@@ -1,40 +1,37 @@
 ---
-title: "Progetto Data Management for Big Data"
+title: "Caratteristiche del cliente da considerare per la tariffazione di un contratto RCA"
 author: "Alex Fulgosi"
-date: "19 agosto 2018"
+date: "28 Agosto 2018"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
-# Titolo
- 
 <br>
 
-### 1.Introduzione
+###1. Introduzione
 
-La polizza per la responsabilità civile auto è il contatto assicurativo più diffuso e di uso comune. In Italia è per legge obbligatorio dal 1969 per chiunque metta in circolo, anche se non da proprietario, un veicolo a motore o natante.<br>All'interno delle imprese assicurative che esercitano il ramo RCA, fondamentale è la funzione attuariale, atta a valutare l'adeguatezza dell'assunzione dei rischi. In linea generale, ciò si traduce nel calcolare adeguatamente i requisiti patrimoniali e le riserve tecniche delle imprese, nella gestione di queste ultime, e nella valutazione dei rischi e dei modelli che ne stimano l'incidenza.<br>Essendo la polizza RCA obbligatoria, e quindi vigendo l'obbligo per le imprese di contrarre con i clienti, il ruolo attuariale che diviene ancor più fondamentale in questo ramo è quello di valutare adeguatamente il rischio. In altre parole, non potendo negare la copertura assicurativa, bisogna quantomeno darle il giusto prezzo.<br>Diventa allora fondamentale tracciare un profilo dettagliato del cliente, che determina in base alle caratteristiche di quest'ultimo, quanto rischioso sia assicurarne la responsabilità civile per la messa in circolo di un veicolo, e avere un quadro di quali siano le caratteristiche che fanno propendere per una tariffazione maggiore o minore, al fine di risultare appetibili per clienti preferibili e di tutelarsi da quelli più rischiosi.<br>
-
-<br>
-
-###2.Scopo dell'analisi
-
-Lo scopo del progetto è quello di analizzare un dataset che raccoglie informazioni su profili di clienti di un'impresa di assicurazione che esercita il ramo RCA, e capire quali tra queste informazioni possono avere un incidenza nel determinare se il rischio assicurato per il cliente è maggiore o minore.<br>Senza scendere nel dettaglio della stima del rischio e del suo inserimento nei modelli attuariali, questa analisi si propone di dare visione, attraverso l'utilizzo di grafici, dell'incidenza che alcune caratteristiche di un assicurato hanno sul suo profilo di rischio. In particolare si vuole spiegare qual'è l'incidenza sulla sinistrosità di un soggetto, ovvero quanto questo propenda ad avere incidenti stradali, e sull'ammontare dei costi che questo comporta all'impresa.<br>
+La polizza per la responsabilità civile auto è il contatto assicurativo più diffuso e di uso comune. In Italia è per legge obbligatorio dal 1969 per chiunque metta in circolo, anche se non da proprietario, un veicolo a motore o natante.<br>All'interno delle imprese assicurative che esercitano il ramo RCA, fondamentale è la funzione attuariale, atta a valutare l'adeguatezza dell'assunzione dei rischi. In linea generale, ciò si traduce nel calcolare adeguatamente i requisiti patrimoniali e le riserve tecniche delle imprese, nella gestione di queste ultime e nella valutazione dei rischi e dei modelli che ne stimano l'incidenza.<br>Essendo la polizza RCA obbligatoria, e quindi vigendo l'obbligo per le imprese di contrarre con i clienti, il ruolo attuariale che diviene ancor più fondamentale in questo ramo è quello di valutare adeguatamente il rischio. In altre parole, non potendo negare la copertura assicurativa, bisogna quantomeno darle il giusto prezzo.<br>Diventa allora fondamentale tracciare un profilo dettagliato del cliente che determina, in base alle caratteristiche di quest'ultimo, quanto rischioso sia assicurarne la responsabilità civile per la messa in circolo di un veicolo, e avere un quadro di quali siano le caratteristiche che fanno propendere per una tariffazione maggiore o minore, al fine di risultare appetibili per clienti preferibili e di tutelarsi da quelli più rischiosi.<br>
 
 <br>
 
-###3.Il dataset utilizzato
+###2. Scopo dell'analisi
 
-Il dataset utilizzato appartiene ad un'impresa di assicurazione di cui, per ragioni di privacy, non si conosce il nome. È stato messo a mia disposizione dal professor Salvatore Militello, docente di Statistica per le Assicurazioni presso l'Università degli Studi di Milano Bicocca.<br>Il dataset raccoglie profili di clienti che hanno una polizza RCA con l'impresa, e per ognuno sono registrate caratteristiche del soggetto e del veicolo assicurato in un anno corrente. In particolare si fa riferimento al 2007, e vengono anche registrati il numero di sinistri avvenuti e l'eventuale costo.<br>Nello specifico le variabili del dataset sono le seguenti:
+Lo scopo del progetto è quello di analizzare un dataset che raccoglie informazioni su profili di clienti di un'impresa di assicurazione che esercita il ramo RCA e, successivamente, capire quali tra queste informazioni possono avere un incidenza nel determinare se il rischio assicurato per il cliente è maggiore o minore.<br>Senza scendere nel dettaglio della stima del rischio e del suo inserimento nei modelli attuariali, questa analisi si propone di dare visione, attraverso l'utilizzo di grafici, dell'incidenza che alcune caratteristiche di un assicurato hanno sul suo profilo di rischio. In particolare, si vuole spiegare qual è l'incidenza sulla sinistrosità di un soggetto, ovvero quanto questo propenda ad avere incidenti stradali, e sull'ammontare dei costi che questo comporta all'impresa.<br>Queste due componenti oggetto di studio saranno analizzate separatamente; se una caratteristica di un soggetto fa sì che questo abbia più propensione ai sinistri, ma altresì che questi sinistri siano di poco conto, può sorgere il dubbio su come valutare il soggetto: è o non è un buon cliente per l'impresa? Ma, nella pratica attuariale, non c'è bisogno di fare questa mediazione, in quanto, una volta riconosciuto un cluster di appartenenza del cliente sulla base delle sue caratteristiche, la tipologia di cliente individuata fornisce per lui una stima della probabilità di sinstro e una stima del costo, stime con cui lavorerà un modello attuariale che definirà il valore della sua polizza.<br>
+
+<br>
+
+###3. Il dataset utilizzato
+
+Il dataset utilizzato appartiene ad un'impresa di assicurazione di cui, per ragioni di privacy, non si conosce il nome. È stato messo a mia disposizione dal professor S. Militello, docente di Statistica per le Assicurazioni presso l'Università degli Studi di Milano Bicocca.<br>Il dataset raccoglie 186523 profili di clienti che hanno una polizza RCA con l'impresa e, per ognuno, sono registrati connotati del soggetto e del veicolo assicurato in un anno corrente. In particolare, si fa riferimento al 2007; vengono anche registrati il numero di sinistri avvenuti e l'eventuale costo.<br>Nello specifico le variabili del dataset sono le seguenti:
 ```{r import data,include=FALSE}
-#Carichiamo le librerie
 library(tidyverse)
 pol <- read_csv("Polizze.csv", na = "MISS") %>%
   rename(costo=costo_plafonato)
 ```
-```{r head data, echo=FALSE}
+```{r head data}
 knitr::kable(pol[1:5,])
 
 ```
@@ -54,31 +51,560 @@ Dove:
 
 <br>
 
-###4.Analisi condotte
+###4. Analisi condotte
 
-Le analisi condotte sono state fatte utilizzando il software R tramite RStudio, servendosi di funzioni dei pacchetti tidyverse:
-```{r dataset, message=FALSE}
+Le analisi condotte sono state fatte utilizzando il software R tramite RStudio, servendosi di funzioni dei pacchetti di tidyverse:
+```{r dataset, message=FALSE, echo=TRUE}
 library(tidyverse)
 ```
-È stato analizzato come varia la frequenza dei sinistri ed il loro costo al variare della regione o rovincia d'immatricolazione, dell'età dell'assicurato e degli anni e alimentazione del veicolo.<br>Per farlo, sono stati estrapolate con il pacchetto `dplyr` delle tibbles [^1] , utilizzate per realizzare grafici attraverso il pacchetto `ggplot2`.<br>Il risultato ottenuto è mirato a mostrare l'impatto che le variabili d'interesse hanno sulle variabili oggetto di studio.<br>Non è scopo di questo progetto fornire una reale diversificazione del rischio fondata sulle variabili d'interessse, ovvero cluster di appartenenza in cui per un cliente viene stimata ad esempio la probabilità di sinistro. Si cerca però di dare un quadro generale di quello che è l'impatto di certe caratteristiche di un cliente.<br>
+È stato analizzato come varia la frequenza dei sinistri ed il loro costo al variare della regione o provincia d'immatricolazione, dell'età dell'assicurato e degli anni e dell'alimentazione del veicolo.<br>Per farlo sono state estrapolate con il pacchetto `dplyr` delle tibbles [^1] e dei dataframe, utilizzati per realizzare grafici attraverso il pacchetto `ggplot2` che mostrano frequenze condizionate, modelli lineari e boxplot. [^2] <br>Il risultato ottenuto mira a mostrare l'impatto che le variabili d'interesse hanno sulle variabili oggetto di studio.<br>Non è scopo di questo progetto fornire una reale diversificazione del rischio fondata sulle variabili d'interessse, ovvero i cluster che per ogni cliente stimano la probabilità di sinistro e il danno. Si cerca, invece, di dare un quadro generale di quello che è l'impatto di certe caratteristiche di un cliente su queste due stime.<br>
 
 <br>
 
-###5.Risultati
+###5. Risultati
 
+```{r multiplot, include=FALSE}
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  plots <- c(list(...), plotlist)
+  numPlots = length(plots)
+  if (is.null(layout)) {
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+  } else {
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    for (i in 1:numPlots) {
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
 
-Estraiamo la tabella di frequenza sinistri per regione, eccetto la Basilicata
-```{r tabella frequenze, echo=FALSE}
-
-rfreq <- aggregate(pol[, 7], list(regione=pol$regione), mean) %>%
-  rename(freq_sinistri=num_sinistri)
-rfreq<-rfreq[-2,]
-
-ggplot(data = rfreq) +
-  geom_point(mapping = aes(x = freq_sinistri, y = regione))
+library(knitr)
 ```
 
-[^1]: Here is the footnote.
+<br>
+
+###5.1. Come varia la probabilità di sinistro
+
+Il primo oggetto di analisi è la probabilità di avere un sinistro nel corso dell'anno. Il dataset riguarda il 2007, dunque non ci dà la possibilità di vedere la variazione di tale probabilità con il passare del tempo, ma, assumendo che la probabilità si mantenga costante nel tempo, possiamo ottenere la probabilità di sinistro nell'anno come semplice media di `num_sinistri`.<br>Qesta risulta essere 
+```{r}
+mean(pol$num_sinistri) 
+```
+
+<br>Tuttavia, è interessante vedere come può variare condizionatamente alle altre variabili, in modo da poter vedere che effetto hanno su questa probabilità. Ad esempio, potrei pensare che il genere del conducente possa influenzare la probabilità di sinistro, riscontrando magari una differenza significativa che mi possa far propendere ad assicurare clienti di un sesso rispetto che dell'altro. Differenziare il rischio in base al sesso è per legge vietato, non è possibile applicare una diversa tariffazione che dipenda da esso, ma possiamo vedere rapidamente che questa differenzazione non avrebbe nemmeno senso, dato che la probabilità varia di poco: 
+
+```{r, include=FALSE}
+sfreq <- aggregate(pol[, 7], list(sesso=pol$sesso), mean) %>%
+  rename(Genere = sesso, Frequenza_sinistri = num_sinistri ) 
+```
+```{r tabella}
+knitr::kable(sfreq)
+```
+
+Possiamo però aspettarci di più dalle altre variabili presenti nel dataset. Vediamo ora qualche effetto interessante:<br>
+
+<br>
+
+####5.1.1. Probabilità di sinistro al variare delle regioni e province
+
+Iniziamo prendendo in considerazione la componente geografica: esistono variazioni significative nella probabilità di sinistro in base alla regione di immatricolazione del veicolo, quindi nella regione in cui è più probabile che esso circoli?
+
+```{r, fig.width = 10}
+rfreq <- aggregate(pol[, 7], list(regione=pol$regione), mean) %>%
+  rename(freq_sinistri=num_sinistri)
+
+ggplot(rfreq,aes(regione,freq_sinistri,fill=freq_sinistri)) +
+  geom_col() +
+  labs(
+    title = "Probabilità di sinistro per regione italiana",
+    x = "Regioni",      
+    y = "Probabilità di sinistro",
+    fill = "Probabilità di sinistro") +
+  scale_y_continuous(breaks = seq(0, 0.12, by = 0.02)) +
+  theme_linedraw() +
+  theme_grey()
+```
+
+Possiamo osservare alcune differenze significative. Il Molise, ad esempio, sembra essere la regione con maggior probabilità di sinistro, mentre la Calabria sembra essere quella con minor probabilità dopo la Basilicata, dove la probabilità è 0.<br>Il dato della Basilicata è, probabilmente, dovuto alla scarsa presenza di osservazioni. Potrebbe essere che, per qualche motivo, la compagnia assicurativa in questione abbia pochi clienti calabresi nel 2007, precisamente
+
+```{r, echo=TRUE, message=TRUE}
+nrow(filter(pol, regione == "Basi"))
+```
+
+In effetti, con una probabilità generica del 7.5% circa, 16 assicurati non sono sufficienti per darci un quadro della situazione in Basilicata.<br>Rimuoviamo allora la Basilicata e osserviamo un altro grafico per capire quali siano le regioni con maggiore e minore sinistrosità:
+
+```{r, fig.width = 9.3}
+rfreq<-rfreq[-2,]
+
+p1=ggplot(rfreq, aes(x = freq_sinistri, y = regione)) +
+  geom_point(size=2) +
+  geom_point(data=filter(rfreq, freq_sinistri<=0.06),color="blue",size=3) +
+  geom_point(data=filter(rfreq, freq_sinistri>=0.1),color="red",size=3) +
+  geom_text(aes(label=regione), alpha=0.3, hjust = 0, nudge_x = 0.001) +
+  labs(
+    title = "Probabilità di sinistro per regione italiana",
+    subtitle= "Quali regioni sono le 'peggiori' e quali le 'migliori'",
+    x = "Probabilità di sinistro",      
+    y = "Regioni") +
+  theme(axis.text.y=element_blank(), axis.ticks.y=element_blank())
+p1
+```
+
+Si vede che in Clabria, Veneto e Emilia-Romagna la probabilità di sinistro nell'anno è inferiore al 6% (in blu), mentre ci sono 4 regioni in cui la probabilità supera il 10% (in rosso).<br>Il senso nell'osservare tali differenze serve a suggerire un sistema di tariffazione che, tenendo conto di come il rischio aumenti in base alla regione in cui probabilmente circolerà il veicolo, può proporre un costo che avvantaggi, ad esempio, un veneto rispetto ad un molisano. Nella realtà però, si va più nello specifico, osservando la provincia di immatricolazione.<br>Avendo colto differenze significative a livello regionale, vediamo dunque se queste permangono a livello provinciale. Non lo vedremo per tutte le province, ma andremo ad osservare come si comporta la probabilità di sinistro nelle province delle regioni in blu e in rosso:
+
+```{r, fig.width = 9.3, fig.height = 7}
+
+#per ordinare le provincie nel grafico 
+rank=tibble(x=c("Cala","Vene", "Emil","Sard","Ligu","Camp","Moli"),y=1:7)
+
+#estraiamo la prob sinistro per le provincie delle regioni blu e rosse
+pfreq<- aggregate(pol[, 7], list(PV_targa=pol$PV_targa), mean) %>%
+  rename(prov=PV_targa) %>%
+  rename(freq_sinistri=num_sinistri) %>%
+  mutate(Regione=pol$regione[match(prov, pol$PV_targa)]) %>%
+  filter(Regione=="Cala"|Regione=="Vene"|Regione=="Emil"|
+           Regione=="Sard"|Regione=="Moli"|Regione=="Ligu"|Regione=="Camp") %>%
+  mutate(Rank=rank$y[match(Regione, rank$x)]) %>%
+  filter(freq_sinistri != 0) %>%
+  arrange(Rank)
+  
+#per mantenere l'ordine delle provincie ottenuto sopra nel grafico
+pfreq$Provincia <- factor(pfreq$prov, as.character(pfreq$prov))
+  
+#grafico delle provincie d'interesse
+p2=ggplot(pfreq, aes(x = freq_sinistri, y = Provincia, color=Regione, order = Rank)) +
+  geom_point(size=2)+
+  scale_colour_manual(
+    values = c(Cala="#330066", Vene="#3333FF", Emil="#3399CC", 
+               Sard="#FF6666", Ligu="#FF3333", Camp="#FF0033", Moli="#990000")) +
+  geom_text(aes(label=Provincia), alpha=0.3, hjust = 0, nudge_x = 0.001) +
+  labs(
+    title = "Probabilità di sinistro nelle provincie",
+    subtitle= "Le 'migliori' regioni (in blu) e 'peggiori' (in rosso) a livello provinciale",
+    x = "Probabilità di sinistro",      
+    y = "Provincie") +
+  theme(axis.text.y=element_blank(), axis.ticks.y=element_blank())
+
+multiplot(p1, p2)
+```
+
+Possiamo vedere come le differenze permangono anche a livello provinciale, dando un idea più precisa di come la probabilità di sinistro cambi. Ad esempio, la Calabria è la regione con probabilità minore a livello regionale, ma tra le provincie la probabilità cambia con grande variabilità. Alcune tra le province delle regioni rosse hanno una probabilità di sinistro inferiore a certe province blu, quindi una penalizzazione nelle tariffe (a livello regionale) non vale per ogni provincia.<br>Possiamo osservare come a Reggio Calabria la probabilità di sinistro si aggiri sul 2.5% circa, mentre a Isernia va quasi a sfiorare il 20%.<br>
+
+<br>
+
+####5.1.2 Probabilità di sinistro al variare dell'età
+
+Osserviamo ora se l'età del guidatore può incidere sulla probabilità di sinistro.
+
+```{r, fig.width = 9.3}
+
+#frequenze per età
+efreq <- aggregate(pol[, 7], list(eta=pol$eta), mean) %>%
+  rename(freq_sinistri=num_sinistri)
+
+ggplot(efreq, aes(eta, freq_sinistri)) +
+  geom_line(color="blue", size=1) +
+  labs(
+    title = "Probabilità di sinistro",
+    subtitle = "Trend in base all'aumento dell'età del guidatore", 
+    x = "Età del guidatore",
+    y = "Probabilità di sinistro",
+    fill = "Probabilità di sinistro") +
+  scale_x_continuous(breaks = seq(20, 90, by = 10)) +
+  geom_hline(aes(yintercept=mean(pol$num_sinistri)), linetype=2, alpha=0.5)
+
+```
+
+La lina tratteggiata mostra dove si colloca la probabilità di sinistro non condizionata. Il trend mostra che, in generale, all'aumentare dell'età la probabilità di sinistro cala. La probabilità di sinistro è elevata tra i guidatori più giovani, poi, verso i 30 anni sembra restare sulla probabilità generale per poi scendere passati i 60 anni.<br>
+
+<br>
+
+####5.1.3 Probabilità di sinistro condizionata alla potenza del veicolo
+
+Iniziamo ora ad analizzare le caratteristiche del veicolo assicurato, considerandone la potenza fiscale, ossia la cilindrata espressa in centesimi.
+
+```{r, fig.width = 9.3}
+
+hfreq <- aggregate(pol[, 7], list(HP_fiscali=pol$HP_fiscali), mean) %>%
+  rename(freq_sinistri=num_sinistri) %>%
+  filter(HP_fiscali > 5 & HP_fiscali < 34)
 
 
-*Proviamo questo font*
+ggplot(hfreq, aes(HP_fiscali, freq_sinistri)) +
+  geom_line(color="#FF6600", size=1) +
+  labs(
+    title = "Probabilità di sinistro",
+    subtitle = "Trend in base all'aumento di cilindrata dei veicoli", 
+    x = "Cilindrata / 100",
+    y = "Probabilità di sinistro",
+    fill = "Probabilità di sinistro") +
+  geom_hline(aes(yintercept=mean(pol$num_sinistri)), linetype=2, alpha=0.5)
+
+```
+
+Osserviamo che il trend va salendo dalle cilindrate più basse fino a poco prima dei 25. Alle cilindrate più alte sembra scendere, ma aumenta la variabilità, probabilmente dovuta alla presenza più rara di veicoli con potenza così alta, così come era nei veicoli con potenza minore di 10.<br>Si potrebbe pensare allora di considerare una tariffa in base alla potenza solo per i veicoli con `HP_fiscali` tra 10 e 25, considerando che la probabilità di sinistro aumenta all'aumentare della potenza.<br>
+
+<br>
+
+####5.1.4 Probabilità di sinistro condizionata all'età del veicolo
+
+Prendiamo ora in considerazione l'età del veicolo, ovvero gli anni trascorsi dalla sua immatricolazione.
+
+```{r, fig.width = 9.3}
+
+#frequenze per età del veicolo
+vfreq <- aggregate(pol[, 7], list(anni_auto=pol$anni_auto), mean) %>%
+  rename(freq_sinistri=num_sinistri) %>%
+  filter(anni_auto >= 0 & anni_auto < 28)
+
+ggplot(vfreq, aes(anni_auto, freq_sinistri)) +
+  geom_line(color="#663366", size=1) +
+  labs(
+    title = "Probabilità di sinistro",
+    subtitle = "Trend in base all'aumento dell' età del veicolo", 
+    x = "Anni dall'immatricolazione",
+    y = "Probabilità di sinistro",
+    fill = "Probabilità di sinistro") +  
+  scale_x_continuous(breaks = seq(0, 30, by = 5)) +
+  geom_hline(aes(yintercept=mean(pol$num_sinistri)), linetype=2, alpha=0.5)
+
+```
+
+In questo caso vediamo un trend decrescente all'aumentare dell'età del veicolo. Per i veicoli più datati abbiamo poi un elevata variabilità, anche questa probabilmente dovuta alla rarità. Resta, tuttavia, plausibile utilizzare questa variabile per differenziare il rischio nei veicoli con un anzianità fino ai 20 anni circa.<br>
+
+<br>
+
+####5.1.5 Probabilità di sinistro al variare della tipologia di alimentazione 
+
+Concludiamo l'analisi sulla probabilità di sinistro prendendo ora in considerazione le diverse tipologie di alimentazione del veicolo. Queste sono rappresentate da 59 differenti codici, per ognuno possiamo vedere se varia la probabilità:
+
+```{r, fig.width = 9.3}
+
+afreq <- aggregate(pol[, 7], list(alimentazione=pol$alimentazione), mean) %>%
+  rename(freq_sinistri=num_sinistri)
+
+ggplot(afreq, aes(alimentazione, freq_sinistri, fill=freq_sinistri)) +
+  geom_col() +
+  coord_polar() +
+  theme_minimal() +
+  scale_fill_gradient(low="white", high="#009900", limits=c(0,0.25)) +
+  scale_y_continuous(breaks = seq(2, 10, by = 1)) +
+  labs(
+    title = "Probabilità di sinistro per tipologia di alimentazione del veicolo",
+    x = "",      
+    y = "",
+    fill = "Probabilità di sinistro")
+
+
+```
+
+Anche senza scendere nel dettaglio, è possibile osservare che anche la tipologia di alimentzione del veicolo può giocare un ruolo significativo nel determinare la probabilità di sinistro del cliente.<br>
+
+<br>
+
+###5.2. Come varia il costo dei sinistri
+
+Il secondo oggetto preso in considerazione dalla mia analisi è il costo dei sinistri. È possibile che anche il costo che l'impresa deve sostenere a fronte di un sinistro possa esser previsto come maggiore o minore in funzione del valore che le altre variabili assumono? E se sì in che modo?<br>Studiando la probabilità di sinistro, si è visto, ad esempio, che l'età del veicolo ha un incidenza sulla probabilità, in particolare che questa sembra essere più alta nei primi anni di utilizzo della vettura, per poi scendere. Non è detto, però, che questi sinistri, causati con più o meno probabilità, abbiano in media un costo diverso. Se osserviamo proprio l'età del veicolo, infatti, il modello lineare che interpola il costo dei sinistri in funzione dell'età del veicolo ci dà il seguente risultato:
+
+```{r, fig.width = 9.3}
+
+sinis <- pol %>%
+  filter(num_sinistri != 0 & costo > 0)
+
+ggplot(sinis, aes(anni_auto, costo)) +
+  geom_smooth(method = lm, color="#663366") +
+  labs(
+    title = "Andamento del costo dei sinistri al crescere dell'età del veicolo",
+    x = "Anni dall'immatricolazione",      
+    y = "Costo del sinistro") 
+
+```
+
+Osserviamo che il modello mostra una pendenza molto leggera con un intervallo di confidenza molto ampio sulle età avanzate. Si può dire, quindi, che la pendenza che suggerisce un aumento del costo all'aumentare dell'anzianità del veicolo è non solo troppo scarsa da esser presa in considerazione, ma anche poco affidabile.<br>Concludendo, il costo dei sinistri non cambia in funzione dell'età del veicolo, quindi per questa variabile va considerato soltanto come cambia la probabilità di sinistro.<br>Vediamo ora se per le altre variabili possiamo osservare un effetto significativo, lavorando con le osservazioni che rappresentano i clienti che hanno comportato un costo per la compagnia. Queste sono 8833<br>
+
+<br>
+
+####5.2.1. Costo dei sinistri al variare delle regioni e province
+
+Vediamo, utilizzando i boxplot, come si comporta la variabile `costo` nelle diverse regioni:
+
+<br>
+
+```{r, fig.width = 9.3}
+
+sinis2 = sinis %>%
+  filter(regione != "NA")
+
+ggplot(sinis2, aes(regione, costo)) +
+  geom_boxplot(color="#993300", fill="#FFFFCC") +
+  coord_cartesian(ylim=c(0,15000)) +
+  labs(
+    title = "Ammontare del costo dei sinistri nelle regioni italiane",
+    x = "Regioni",
+    y = "Costo del sinistro") 
+
+
+```
+
+Possiamo vedere che non ci sono variazioni rilevanti, anche se, ad esempio, in Piemonte i costi sembrano essere leggermente più bassi.<br>In Calabria notiamo una grande variabilità. Ricordiamoci che avevamo osservato precedentemente una certa variabilità anche per quel che riguarda la probabilità di sinistro tra le province calabresi; inoltre, la Calabria era la regione con probabilità minore.<br>Se analizziamo nelo specifico la situazione calabrese guardando a livello provinciale osserviamo:
+
+```{r, fig.width = 9.3}
+
+Cal <- sinis %>%
+  filter(regione=="Cala")
+
+ggplot(Cal, aes(PV_targa, costo)) +
+  geom_boxplot(color="#993300", fill="#FFFFCC") +
+  coord_cartesian(ylim=c(0,26000)) +
+  labs(
+    title = "Ammontare del costo dei sinistri nelle province calabresi",
+    x = "Province",
+    y = "Costo del sinistro") 
+
+```
+
+Il costo sembra variare in modo significativo tra le province: a Catanzaro i costi sono tra i più bassi, mentre la provincia di Crotone registra i costi più elevati e anche con grande varianza.<br>Stando alla precedente analisi sulla probabilità di sinistro, la Calabria sembrava essere tra le regioni da favorire, ma forse non tutte le province andranno favorite considerando il costo dei sinistri, in particolare Crotone.<br>Analizziamo ora la situazione in termini di costo medio del sinistro:
+
+```{r, fig.width = 9.3}
+
+rcost <- aggregate(sinis[, 8], list(regione=sinis$regione), mean) %>%
+  rename(costo_med=costo)
+
+p3=ggplot(rcost, aes(x = costo_med, y = regione)) +
+  geom_point(size=2) +
+  geom_point(data=filter(rcost, costo_med<=3500),color="blue",size=3) +
+  geom_point(data=filter(rcost, costo_med>=4000),color="red",size=3) +
+  geom_text(aes(label=regione), alpha=0.3, hjust = 0, nudge_x = 100) +
+  labs(
+    title = "Costo medio del sinistro per regione italiana",
+    x = "Costo medio sinistro",      
+    y = "Regioni") +
+  theme(axis.text.y=element_blank(), axis.ticks.y=element_blank())
+p3
+
+
+```
+
+Possiamo ora osservare l'effetto della provincia di Crotone sulla Calabria, che fa alzare il costo medio dei sinistri e fa sì che la Calabria sia la regione con il costo medio maggiore. 
+
+```{r, fig.width = 6, fig.height = 3}
+
+Cal_cost <- aggregate(Cal[, 8], list(PV_targa=Cal$PV_targa), mean) %>%
+  rename(costo_med=costo)
+
+ggplot(Cal_cost, aes(x = costo_med, y = PV_targa)) +
+  geom_point(size=2) +
+  geom_point(data=filter(Cal_cost, costo_med<=3500),color="blue",size=3) +
+  geom_point(data=filter(Cal_cost, costo_med>=4000),color="red",size=3) +
+  geom_text(aes(label=PV_targa), alpha=0.3, hjust = 0, nudge_x = 100) +
+  scale_x_continuous(breaks = seq(2000, 10000, by = 1000)) +
+  labs(
+    title = "Costo medio del sinistro per provincia calabrese",
+    x = "Costo medio sinistro",      
+    y = "Province") +
+  theme(axis.text.y=element_blank(), axis.ticks.y=element_blank())
+
+```
+
+Il problema con questa provincia può essere riconducibile ad un evento particolare, forse un sinistro che ha coinvolto più mezzi di elevato costo, motivo per il quale la situazione a Crotone andrebbe analizzata per più anni al fine di avere un quadro più chiaro.<br><br>Calabria a parte, la situazione in termini di costo medio offre un quadro abbastanza variegato, che vede l'Umbria seconda come costo medio maggiore e Sardegna e Lombardia le regioni con il costo medio minore.<br>Di maggior importanza resta però il grafico con i boxplot, poichè il costo medio può essere significativamente incrementato da outlier, ovvero sinisti particolarmente costosi ma poco probabili, che rappresentano eccezioni e quasi sicuramente non accadono ogni anno. Ciò nonostante, per alcune regioni, sia a livello di boxplot che di costo medio, le differenze sono abbastanza tangibili, come ad esempio tra Piemonte e Umbria, ragion per la quale si può prendere in considerazione la componente geografica anche in termine di costo medio.<br>
+
+<br>
+
+####5.2.2. Costo dei sinistri al variare dell'età
+
+Vediamo ora se il fattore dell'età può giocare un ruolo nel definire il costo atteso dei sinistri.<br>Il seguente grafico mostra un modello lineare che spiega il costo dei sinistri in funzione dell'età dei clienti, in sovrapposizione all'andamento del costo medio per ogni età.
+
+```{r, fig.width = 9.3}
+
+ecost <- aggregate(sinis[, 8], list(eta=sinis$eta), mean) %>%
+  rename(costo_med=costo) %>%
+  filter(eta < 90)
+
+ggplot(sinis, aes(eta, costo)) +
+  geom_line(data=ecost, aes(eta, costo_med), color="blue", size=1, alpha=0.3) +
+  geom_smooth(method = lm) +
+  labs(
+    title = "Andamento del costo dei sinistri al crescere dell'età del guidatore",
+    subtitle = "Paragone con il trend del costo medio",
+    x = "Età del guidatore",      
+    y = "Costo del sinistro") 
+
+```
+
+Rispetto al primo modello visto nel paragrafo 5.2, con il costo in funzione dell'anzianità del veicolo, questo modello con l'età del conducente spiega un effetto più significativo: si ha in modo chiaro una relazione inversamente proporzionale. Osservando anche il trend del costo medio, infatti, il grafico evidenzia come al crescere dell'età del guidatore il costo dei sinistri diminuisca.<br>
+
+<br>
+
+####5.2.3. Costo dei sinistri condizionato alla potenza del veicolo
+
+Un grafico realizzato come il precedente, ma applicato alla relazione che il costo ha con la potenza del veicolo, risulta come segue:
+
+```{r, fig.width = 9.3}
+
+hcost <- aggregate(sinis[, 8], list(HP_fiscali=sinis$HP_fiscali), mean) %>%
+  rename(costo_med=costo) %>%
+  filter(HP_fiscali < 28)
+
+sinis2 <- filter(sinis, HP_fiscali < 28 )
+  
+ggplot(sinis2, aes(HP_fiscali, costo)) +
+  geom_line(data=hcost, aes(HP_fiscali, costo_med), color="#FF6600", size=1, alpha=0.3) +
+  geom_smooth(method = lm, color="#FF6600") +
+  labs(
+    title = "Andamento del costo dei sinistri al crescere della cilindrata del veicolo",
+    subtitle = "Paragone con il trend del costo medio",
+    x = "Cilindrata / 100",      
+    y = "Costo del sinistro") 
+
+```
+
+In questo caso vediamo una pendenza non significativa che, osservando il trend del costo medio, si può ricondurre ai bassi costi che si rilevano per cilindrate inferiori a 1000. Sembra, infatti, che far dipendere la valutazione del costo dei sinistri dalla potenza del veicolo, possa aver senso solo per le cilindrate basse.<br>Possiamo vederlo più chiaramente riproponendo il grafico per le cilindrate uguali o inferiori a 1000:
+
+```{r, fig.width = 6, fig.height = 3}
+
+hcost2 <- aggregate(sinis[, 8], list(HP_fiscali=sinis$HP_fiscali), mean) %>%
+  rename(costo_med=costo) %>%
+  filter(HP_fiscali < 11)
+
+sinis22 <- filter(sinis, HP_fiscali < 11 )
+
+ggplot(sinis22, aes(HP_fiscali, costo)) +
+  geom_line(data=hcost2, aes(HP_fiscali, costo_med), color="#FF6600", size=1, alpha=0.3) +
+  geom_smooth(method = lm, color="#FF6600") +
+  labs(
+    title = "Andamento del costo dei sinistri al crescere della cilindrata del veicolo",
+    subtitle = "Paragone con il trend del costo medio",
+    x = "Cilindrata / 100",      
+    y = "Costo del sinistro") 
+
+```
+
+Per le cilindrate più piccole di 800 la variabilità dei dati è considerevole, ma è comunque evidente la relazione direttamente proporzionale. Possiamo dunque concludere che, per quanto riguarda le cilindrate inferiori a 1000, il costo dei sinistri aumenti all'aumentare della potenza del veicolo, per poi assestarsi per le cilindrate più alte.<br>
+
+<br>
+
+####5.2.4. Costo dei sinistri al variare della tipologia di alimentazione
+
+Analizziamo ora l'effetto della tipologia di alimentazione del veicolo. Prima di procedere, poiché lavoriamo ora con 8833 osservazioni, assicuriamoci di avere abbastanza veicoli coinvolti in sinistri per ogni tipologia di alimentazione presa in considerazione, non meno di 10:
+
+```{r, fig.width = 9.3}
+
+ggplot(sinis, aes(alimentazione)) +
+  geom_bar(color = "#006600", fill = "#99FF99") +
+  coord_cartesian(ylim=c(0,50)) +
+  geom_hline(aes(yintercept=10), linetype=2, alpha=0.5, color="red") 
+
+```
+
+Rimuoviamo, dunque, le classi con 10 osservazioni o inferiori e vediamo ora i boxplot per il costo:
+
+```{r, fig.width = 9.3}
+
+sinis3 <- sinis %>%
+  filter (alimentazione != "02" & alimentazione != "12" & alimentazione != "19" & alimentazione != "P3" & alimentazione != "P4")
+
+acost <- aggregate(sinis[, 8], list(alimentazione=sinis$alimentazione), mean) %>%
+  rename(costo_med=costo) %>%
+  filter (alimentazione != "02" & alimentazione != "12" & alimentazione != "19" & alimentazione != "P3" & alimentazione != "P4")
+
+ggplot(sinis3, aes(alimentazione, costo)) +
+  geom_boxplot(color = "#006600", fill = "#FFFFCC") +
+  coord_cartesian(ylim=c(0,15000)) +
+  labs(
+    title = "Ammontare del costo dei sinistri per tipologia di alimentazione del veicolo",
+    x = "Codice tipologia di alimentazione",
+    y = "Costo del sinistro") 
+
+```
+
+Notiamo che la classe 24 raggiunge i costi più alti, ma presenta molta varianza. Effettivamente la sua valutazione si basa su circa 30 osservazioni, potrebbe servire un numero maggiore di casi per accertarsi della propensione di questa classe ai costi elevati, come 4B per cui vale lo stesso discorso.<br>La classe 22, invece, raccoglie abbastanza osservazioni per mostrare un dato concreto e vediamo che presenta i valori più bassi, così come la T1.<br>Valori piuttosto variabili e alti anche per la classe 20.<br>Anche l'alimentazione, dunque, sembra essere una variabile che può essere utilizzata per determinare profili di clienti a basso o alto costo del sinistro.<br>Osserviamo ora una lettura in chiave di costo medio per vedere se anche così emerge varietà tra le classi di alimentazione:
+
+```{r, fig.width = 9.3}
+
+ggplot(acost, aes(alimentazione, costo_med, fill=costo_med)) +
+  geom_col() +
+  coord_polar() +
+  theme_minimal() + 
+  scale_fill_gradient(low="#CCFFCC", high="#009900", limits=c(1800,9000)) +
+  scale_y_continuous(breaks = seq(10000, 10001, by = 1)) +
+  labs(
+    title = "Costo medio del sinistro per tipologia di alimentazione del veicolo",
+    x = "",      
+    y = "",
+    fill = "Costo medio sinistro")
+
+```
+
+La classe 24, per quanto detto prima, ha il costo medio maggiore. Anche analizzando il costo medio è possibile osservare alcune differenze significative tra le classi di alimentazione.<br>
+
+<br>
+
+####5.2.5. Analisi incrociate per il costo dei sinistri
+
+Consideriamo ora un'altra modalità per valutare come classificare la propensione di un cliente ad arrecare, tramite sinistro, un costo elevato per l'impresa.<br>Abbiamo osservato in precedenza come la stima di tale costo possa essere influenzata dalla regione o provincia di appartenenza, dall'età del guidatore, dalla potenza del veicolo e dalla sua tipologia di alimentazione. Lo abbiamo fatto prendendo in considerazione ciascuno di questi fattori separatamente.<br>Come già detto, il presente progetto non ha lo scopo di considerare la stima del costo dei sinistri a livello pratico, ma possiamo ora considerare una visione incrociata dei fattori citati prima; ovvero, posso valutare come un cliente propenda a sinistri dal costo elevato guardando più di una delle sue caratteristiche?<br>Ad esempio, abbiamo notato come la circolazione in determinate regioni comporti una diversità nei costi e come l'età del guidatore faccia diminuire il costo man mano che incrementa. Proviamo ora a vedere se, in diverse regioni, l'effetto dell'età è lo stesso, utilizzando modelli lineari che spiegano il costo in funzione dell'età ma condizionatamente alla regione di appartenenza.<br>Non vediamo un grafico con tutte le regioni, ma proviamo ad analizare quelle con i costi medi più bassi e più alti.Dovremmo aspettarci che le regioni "rosse" abbiano un modello lineare collocato più in alto nello spazio rispetto ai modelli delle rgioni "blu", ma vediamo se possiamo osservare diverse pendenze:
+
+```{r, fig.width = 9.3}
+
+sinis4 <- sinis %>%
+  filter(regione == "Lomb" | regione == "Sard" | regione == "Umbr" | regione == "Cala")
+
+p4=ggplot(sinis4, aes(eta, costo, color=regione)) +
+  geom_smooth(method = lm, se = FALSE) +
+  scale_color_manual(
+    values = c(Lomb = "#000099", Sard = "#3333FF", Umbr = "#FF0000", Cala= "#CC0000")
+  ) +
+  labs(
+    title = "Andamento del costo dei sinistri al crescere dell'età del guidatore",
+    subtitle = "Condizionatamente alla regione",
+    x = "Età del guidatore",      
+    y = "Costo del sinistro") 
+
+multiplot(p3, p4, cols=2)
+
+```
+
+Vediamo che la posizione delle rette rispetta quanto atteso, ma la pendenza può cambiare. Ad esempio, in Umbria, sembra che l'effetto dell'età sia ancora più marcato, tanto che i costi nelle età molto avanzate scendono al di sotto di quelli previsti dal modello lineare di Lombardia e Sardegna. Notiamo, inoltre, che se pur tutti i modelli mostrino la relazione inversamente proporzionale, in Calabria e Lombardia la pendenza è minima.<br><br>Non è detto che la stima del costo per un modello attuariale debba essere frutto di un'analisi incrociata, ma può essere utile tenere in considerazione che l'effetto di una variabile può cambiare sui livelli di un'altra.<br>
+
+<br>
+
+###6. Conclusioni
+
+Riassumendo quanto osservato dai grafici, possiamo ora tirare le somme e fare un breve riepilogo di come le variabili considerate possano influenzare la stima della probabilità di sinistro e del suo ammontare in termini di costo in un  modello attuariale per le assicurazioni sulla responsabilità civile auto.<br>
+
+<br>
+
+Per la probabilità di sinistro:
+
+* Regioni o province determinano significativamente una differenza nelle probabilità.
+* L'età del guidatore fa diminuire la probabilità di sinistro man mano che aumenta.
+* Per la potenza del veicolo, la probabilità di sinistro cresce al crescere della cilindrata fino a circa 2500, poi c'è alta variabilità.
+* Per gli anni dall'immatricolazione del veicolo, fino ai 20, più il veicolo è datato, minore è la probabilità di sinistro.
+* La tipologia di alimentazione fa variare significativamente la probabilità di sinistro.
+
+Per il costo dei sinistri:
+
+* Regioni o province determinano significative differenze nei costi.
+* L'età del guidatore fa diminuire il costo dei sinistri al suo aumentare.
+* La potenza del veicolo, nelle cilindarte fino a 1000, comporta un aumento direttamente proporzionale dei costi.
+* L'anzianità del veicolo non ha incidenza sull'aumento o diminuzione dei costi.
+* La tipologia di alimentazione incide significativamente sul costo dei sinistri.
+
+<br>
+
+###7. Bibliografia
+
+[1] R for Data Science. Hadley Wickham and Garrett Grolemund. O’Reilly. 2017.<br>
+[2] R Cookbook. Paul Teetor. O’Reilly Media. 2011.<br>
+[3] <http://users.dimi.uniud.it/~massimo.franceschet/ds/r4ds/syllabus/syllabus.html>, ultimo accesso 28/08/2018.<br>
+[4] <http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/>, ultimo accesso 28/08/2018.<br>
+
+[^1]: Da [1] - Capitolo 10
+[^2]: Da [2] - Capitoli 10, 11
+
